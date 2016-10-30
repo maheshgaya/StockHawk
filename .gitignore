@@ -6,3 +6,5 @@
 /captures
 
 *.iml
+
+app/src/main/assets/google-services.json
