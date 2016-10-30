@@ -52,12 +52,16 @@ public class Utils {
     }
 
     public static String truncateBidPrice(String bidPrice) {
-        if (bidPrice != null) {
+
+        try {
             bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
-        } else {
-            return null;
+            return bidPrice;
+        }catch (java.lang.NumberFormatException e){
+            Log.e(LOG_TAG, "truncateBidPrice: ", e);
+            e.printStackTrace();
+
         }
-        return bidPrice;
+        return null;
     }
 
     public static String truncateChange(String change, boolean isPercentChange) {
@@ -84,9 +88,14 @@ public class Utils {
             String change = jsonObject.getString("Change");
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
             builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+            if (truncateBidPrice(jsonObject.getString("Bid")) == null) {
+                return null;
+            }
+
             builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
                     jsonObject.getString("ChangeinPercent"), true));
             builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
+
             builder.withValue(QuoteColumns.ISCURRENT, 1);
             if (change.charAt(0) == '-') {
                 builder.withValue(QuoteColumns.ISUP, 0);

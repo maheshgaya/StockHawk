@@ -118,6 +118,7 @@ public class StockTaskService extends GcmTaskService{
             urlString = urlStringBuilder.toString();
             try{
                 getResponse = fetchData(urlString);
+
                 result = GcmNetworkManager.RESULT_SUCCESS;
                 try {
                     ContentValues contentValues = new ContentValues();
@@ -127,8 +128,14 @@ public class StockTaskService extends GcmTaskService{
                         mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                                 null, null);
                     }
-                    mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-                            Utils.quoteJsonToContentVals(getResponse));
+                    try {
+                        mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
+                                Utils.quoteJsonToContentVals(getResponse));
+                    } catch (java.lang.NullPointerException e){
+                        Log.e(LOG_TAG, "onRunTask: ", e);
+                        e.printStackTrace();
+                        return 0;
+                    }
                 }catch (RemoteException | OperationApplicationException e){
                     Log.e(LOG_TAG, "Error applying batch insert", e);
                 }
