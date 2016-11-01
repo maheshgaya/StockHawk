@@ -7,9 +7,12 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
@@ -132,6 +135,14 @@ public class StockTaskService extends GcmTaskService{
                         mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                                 Utils.quoteJsonToContentVals(getResponse));
                     } catch (java.lang.NullPointerException e){
+                        Log.e(LOG_TAG, "onRunTask: ", e);
+                        e.printStackTrace();
+                        return 0;
+                    } catch (java.lang.NumberFormatException e){
+                        //The user has entered a wrong value.
+                        //Show error to user
+                        //TODO add callback or ResultReceiver
+                        //Toast.makeText(mContext, mContext.getString(R.string.error_empty_uri), Toast.LENGTH_SHORT).show();
                         Log.e(LOG_TAG, "onRunTask: ", e);
                         e.printStackTrace();
                         return 0;

@@ -51,17 +51,11 @@ public class Utils {
         return batchOperations;
     }
 
-    public static String truncateBidPrice(String bidPrice) {
+    public static String truncateBidPrice(String bidPrice)
+        throws java.lang.NumberFormatException{
+        bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+        return bidPrice;
 
-        try {
-            bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
-            return bidPrice;
-        }catch (java.lang.NumberFormatException e){
-            Log.e(LOG_TAG, "truncateBidPrice: ", e);
-            e.printStackTrace();
-
-        }
-        return null;
     }
 
     public static String truncateChange(String change, boolean isPercentChange) {
