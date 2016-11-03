@@ -14,4 +14,5 @@
     <!-- error handling -->
     <string name="error_empty_uri">Could not complete request!</string>
     <string name="error_stock_already_saved">This stock is already saved!</string>
+    <string name="empty_recycleview">No Stocks to show! Tap on + to add a stock!</string>
 </resources>

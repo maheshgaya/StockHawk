@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -53,6 +54,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Context mContext;
     private Cursor mCursor;
     boolean isConnected;
+    private TextView mEmptyRecycleView;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +80,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 networkToast();
             }
         }
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //when recycleview is empty
+        mEmptyRecycleView = (TextView)findViewById(R.id.empty_recyclview);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
         mCursorAdapter = new QuoteCursorAdapter(this, null);
-        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
@@ -90,11 +96,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         Toast.makeText(mContext, position + " is tapped.", Toast.LENGTH_SHORT).show();
                     }
                 }));
-        recyclerView.setAdapter(mCursorAdapter);
+        mRecyclerView.setAdapter(mCursorAdapter);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.attachToRecyclerView(recyclerView);
+        fab.attachToRecyclerView(mRecyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +143,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mTitle = getTitle();
         if (isConnected) {
@@ -222,6 +228,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
         mCursor = data;
+
+        if (mCursorAdapter.getItemCount() == 0){
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyRecycleView.setVisibility(View.VISIBLE);
+
+        } else {
+            mEmptyRecycleView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
