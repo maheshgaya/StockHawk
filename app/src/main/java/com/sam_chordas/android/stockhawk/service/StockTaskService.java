@@ -140,9 +140,6 @@ public class StockTaskService extends GcmTaskService{
                         return 0;
                     } catch (java.lang.NumberFormatException e){
                         //The user has entered a wrong value.
-                        //Show error to user
-                        //TODO add callback or ResultReceiver
-                        //Toast.makeText(mContext, mContext.getString(R.string.error_empty_uri), Toast.LENGTH_SHORT).show();
                         Log.e(LOG_TAG, "onRunTask: ", e);
                         e.printStackTrace();
                         return 0;
