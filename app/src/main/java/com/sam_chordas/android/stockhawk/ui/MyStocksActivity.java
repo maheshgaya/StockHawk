@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -23,8 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.sam_chordas.android.stockhawk.Constants;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.QuoteDatabase;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
@@ -93,7 +96,27 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     @Override
                     public void onItemClick(View v, int position) {
                         //TODO: do something on item click
-                        Toast.makeText(mContext, position + " is tapped.", Toast.LENGTH_SHORT).show();
+                        long quoteId = mCursorAdapter.getItemId(position);
+                        Cursor quoteCursor = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                                new String[]{QuoteColumns.SYMBOL},
+                                QuoteColumns._ID + "= ?",
+                                new String[]{Long.toString(quoteId)},
+                                null);
+                        String symbol = "";
+                        try {
+                            if (quoteCursor.moveToFirst()) {
+                                //We are querying Symbol only so 0 (first element) is ok
+                                symbol = quoteCursor.getString(0);
+                            }
+                        } finally {
+                            quoteCursor.close();
+                        }
+
+                        Intent detailIntent = new Intent(mContext, DetailActivity.class);
+                        Uri detailUri = QuoteProvider.Quotes.withSymbol(symbol);
+                        detailIntent.putExtra(Constants.EXTRA_DETAIL, detailUri);
+                        startActivity(detailIntent);
+                        //Toast.makeText(mContext, symbol + " is tapped.", Toast.LENGTH_SHORT).show(); //debugging
                     }
                 }));
         mRecyclerView.setAdapter(mCursorAdapter);
