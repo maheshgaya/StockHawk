@@ -114,7 +114,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
                         Intent detailIntent = new Intent(mContext, DetailActivity.class);
                         Uri detailUri = QuoteProvider.Quotes.withSymbol(symbol);
-                        detailIntent.putExtra(Constants.EXTRA_DETAIL, detailUri);
+                        detailIntent.putExtra(Constants.EXTRA_DETAIL, detailUri.toString());
                         startActivity(detailIntent);
                         //Toast.makeText(mContext, symbol + " is tapped.", Toast.LENGTH_SHORT).show(); //debugging
                     }

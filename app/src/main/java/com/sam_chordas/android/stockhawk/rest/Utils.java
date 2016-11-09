@@ -6,6 +6,7 @@ import android.util.Log;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -89,6 +90,7 @@ public class Utils {
             builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
                     jsonObject.getString("ChangeinPercent"), true));
             builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
+            builder.withValue(QuoteColumns.CREATED, getCurrentDateTime());
 
             builder.withValue(QuoteColumns.ISCURRENT, 1);
             if (change.charAt(0) == '-') {
@@ -102,4 +104,18 @@ public class Utils {
         }
         return builder.build();
     }
+
+    public static String getCurrentDateTime(){
+        long currentTime = System.currentTimeMillis();
+        Timestamp currentTimestamp = new Timestamp(currentTime);
+        Log.d(LOG_TAG, "getCurrentDateTime: " + currentTimestamp.toString());
+        return currentTimestamp.toString();
+    }
+
+    public static String getFriendlyDate(){
+        //TODO get system preference for date
+        //return AM/PM or 24-hour
+        return null;
+    }
+
 }
