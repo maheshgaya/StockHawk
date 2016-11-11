@@ -11,6 +11,10 @@
     <string name="input_prefill"></string>
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
 
+    <!-- for graph -->
+    <string name="graph_description">Quote over time</string>
+    <string name="detail">Graph</string>
+
     <!-- error handling -->
     <string name="error_empty_uri">Could not complete request!</string>
     <string name="error_stock_already_saved">This stock is already saved!</string>

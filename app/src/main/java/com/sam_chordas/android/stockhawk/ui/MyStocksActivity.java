@@ -95,7 +95,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        //TODO: do something on item click
                         long quoteId = mCursorAdapter.getItemId(position);
                         Cursor quoteCursor = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                 new String[]{QuoteColumns.SYMBOL},
@@ -116,7 +115,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         Uri detailUri = QuoteProvider.Quotes.withSymbol(symbol);
                         detailIntent.putExtra(Constants.EXTRA_DETAIL, detailUri.toString());
                         startActivity(detailIntent);
-                        //Toast.makeText(mContext, symbol + " is tapped.", Toast.LENGTH_SHORT).show(); //debugging
                     }
                 }));
         mRecyclerView.setAdapter(mCursorAdapter);
