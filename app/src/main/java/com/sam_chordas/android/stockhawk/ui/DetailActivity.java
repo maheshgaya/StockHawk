@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -21,16 +22,21 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.sam_chordas.android.stockhawk.Constants;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.AxisFormatter;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * Created by Mahesh Gaya on 11/8/16.
@@ -39,7 +45,6 @@ import java.util.regex.Pattern;
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
     private String mSymbol;
     private static final int CURSOR_LOADER_ID = 1;
-    private static final String REGEX = "[^\\d.]+|\\.(?!\\d)";
     private Cursor mCursor;
     private Toolbar mToolbar;
     private LineChart mChart;
@@ -130,53 +135,92 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    /**
+     * sets data on graph
+     * @param loader
+     * @param data
+     */
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCursor = data;
+        mCursor = data; //transfer data to cursor member
+
+        //initialization
         ArrayList<Float> values = new ArrayList<Float>(){};
-        ArrayList<Float> labels = new ArrayList<Float>(){};
+        ArrayList<String> timesXAxisValues = new ArrayList<String>(){};
+        ArrayList<String> dateXAxisValues = new ArrayList<String>(){};
+        int isUp = 0;
 
-
+        //get data from cursor
         if (mCursor.getCount() != 0){
             while (mCursor.moveToNext()){
                 Float bidPrice = mCursor.getFloat(Constants.COLUMN_BIDPRICE);
                 values.add(bidPrice);
-                Pattern pattern = Pattern.compile(REGEX);
-                Matcher matcher = pattern.matcher(mCursor.getString(Constants.COLUMN_PERCENT_CHANGE));
-                //Log.d(TAG, "onLoadFinished: " + matcher.toString());
-                //labels.add(percentChange);
+                Date date = new Date(Timestamp.valueOf(mCursor.getString(Constants.COLUMN_CREATED)).getTime());
+                isUp = mCursor.getInt(Constants.COLUMN_ISUP);
+                //get time only
+                DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                String timeFormatted = timeFormatter.format(date);
+                timesXAxisValues.add(timeFormatted);
+
+                DateFormat dateFormatter = new SimpleDateFormat("MM-dd");
+                String dateFormatted = dateFormatter.format(date);
+                dateXAxisValues.add(dateFormatted);
+
             }
         }
+
+        String[] timeArray = timesXAxisValues.toArray(new String[timesXAxisValues.size()]);
+        String[] dateArray = dateXAxisValues.toArray(new String[dateXAxisValues.size()]);
+
+        //Add time to x-axis
+        AxisFormatter formatter = new AxisFormatter(getApplicationContext(), dateArray, timeArray);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setGranularity(2f); // minimum axis-step (interval) is 2
+        xAxis.setValueFormatter(formatter);
 
         List<Entry> entries = new ArrayList<Entry>();
         for (int i = 0; i < values.size(); i++) {
 
             // turn your data into Entry objects
-            //labels.get(i)
             entries.add(new Entry(i, values.get(i)));
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Bid Price "); // add entries to dataset
-        if (Build.VERSION.SDK_INT > 22){
-            dataSet.setColor(getResources().getColor(R.color.material_yellow_500, null));
-            dataSet.setCircleColor(getResources().getColor(R.color.material_blue_500, null));
-            dataSet.setValueTextColor(getResources().getColor(android.R.color.white, null)); // styling, ...
+        //disable value text for each point
+        dataSet.setDrawValues(false);
+        //allow graph to be filled up with color
+        dataSet.setDrawFilled(true);
+
+        //don't draw the circles
+        if (timeArray.length != 1) {
+            dataSet.setDrawCircles(false);
+        }
+
+        //fills graph depending on whether it is up or not
+        if (isUp == 0) {
+            if (Build.VERSION.SDK_INT > 22) {
+                dataSet.setColor(getResources().getColor(android.R.color.holo_red_light, null));
+                dataSet.setFillColor(getResources().getColor(android.R.color.holo_red_light, null));
+            } else {
+                dataSet.setColor(getResources().getColor(android.R.color.holo_red_light));
+                dataSet.setFillColor(getResources().getColor(android.R.color.holo_red_light));
+            }
         } else {
-            dataSet.setColor(getResources().getColor(R.color.material_yellow_500));
-            dataSet.setCircleColor(getResources().getColor(R.color.material_blue_500));
-            dataSet.setValueTextColor(getResources().getColor(android.R.color.white)); // styling, ...
+            if (Build.VERSION.SDK_INT > 22) {
+                dataSet.setColor(getResources().getColor(android.R.color.holo_green_light, null));
+                dataSet.setFillColor(getResources().getColor(android.R.color.holo_green_light, null));
+            } else {
+                dataSet.setColor(getResources().getColor(android.R.color.holo_green_light));
+                dataSet.setFillColor(getResources().getColor(android.R.color.holo_green_light));
+            }
         }
 
 
         LineData lineData = new LineData(dataSet);
-
         mChart.setData(lineData);
-        mChart.setData(lineData);
-
         mChart.invalidate(); // refresh
-
-
-
 
     }
 

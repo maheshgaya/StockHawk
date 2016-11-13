@@ -112,7 +112,7 @@ public class Utils {
         return currentTimestamp.toString();
     }
 
-    public static String getFriendlyDate(){
+    public static String getTime(){
         //TODO get system preference for date
         //return AM/PM or 24-hour
         return null;

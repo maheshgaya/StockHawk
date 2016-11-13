@@ -11,6 +11,9 @@
     <string name="input_prefill"></string>
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
 
+    <!-- accessibility -->
+    <string name="content_add_fab">Add a new Quote</string>
+
     <!-- for graph -->
     <string name="graph_description">Quote over time</string>
     <string name="detail">Graph</string>

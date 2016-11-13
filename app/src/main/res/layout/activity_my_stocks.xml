@@ -17,12 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--TODO: ContentDescription-->
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription=""
+        android:contentDescription="@string/content_add_fab"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
