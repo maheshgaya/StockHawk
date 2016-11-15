@@ -1,6 +1,14 @@
 # Stock Hawk
 An Android app for monitoring stocks. Project 3 in the Android Developer Nanodegree by Google.
 
+# Objectives of this project
+- Bring this app to production level
+- Add error handling
+- Add RTL support
+- Refactor hard-coded strings to strings.xml file for internationalization
+- Add Detail Activity
+- Add App Collection Widget
+
 ## Using the Source Code
 1. Clone the project 
 
