@@ -47,6 +47,7 @@ public class StockTaskService extends GcmTaskService{
                 .build();
 
         Response response = client.newCall(request).execute();
+        Log.d(LOG_TAG, "fetchData: " + response.isSuccessful());
         return response.body().string();
     }
 

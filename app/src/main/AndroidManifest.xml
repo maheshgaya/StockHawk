@@ -54,13 +54,16 @@
             android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
             android:exported="false"/>
 
-        <receiver android:name="StockAppWidgetProvider" >
+        <receiver android:name=".ui.StockAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.sam_chordas.android.stockhawk.app.ACTION_DATA_UPDATED" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/stock_appwidget_info" />
         </receiver>
+
+        <service android:name=".widget.StockWidgetIntentService" />
     </application>
 
 </manifest>
