@@ -9,6 +9,6 @@
     <dimen name="chart_padding">8dp</dimen>
 
     <!-- widget -->
-    <dimen name="widget_default_width">40dp</dimen>
+    <dimen name="widget_default_width">250dp</dimen>
     <dimen name="widget_default_height">40dp</dimen>
 </resources>
