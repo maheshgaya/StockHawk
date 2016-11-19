@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.sam_chordas.android.stockhawk.Constants;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.widget.StockWidgetIntentService;
@@ -20,6 +22,13 @@ import com.sam_chordas.android.stockhawk.widget.StockWidgetIntentService;
  */
 
 public class StockAppWidgetProvider extends AppWidgetProvider{
+    private static final String TAG = StockAppWidgetProvider.class.getSimpleName();
+
+    //opening detail activity
+    public static final String CLICK_ACTION = "com.sam_chordas.android.stockhawk.ui.CLICK";
+    public static final String REFRESH_ACTION = "com.sam_chordas.android.stockhawk.ui.REFRESH";
+    public static final String EXTRA_ITEM = "com.sam_chordas.android.stockhawk.ui.item";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         context.startService(new Intent(context, StockWidgetIntentService.class));
@@ -27,10 +36,23 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
+        Log.d(TAG, "onReceive: " + intent.getAction());
+
         if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             context.startService(new Intent(context, StockWidgetIntentService.class));
+        } else if (intent.getAction().equals(CLICK_ACTION)){
+            Log.d(TAG, "onReceive: clicked");
+            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            Intent detailIntent = new Intent(context, DetailActivity.class);
+            detailIntent.putExtra(Constants.EXTRA_DETAIL, intent.getStringExtra(StockAppWidgetProvider.EXTRA_ITEM));
+            context.startActivity(detailIntent);
+
         }
+        super.onReceive(context, intent);
+
+
+
     }
 
     @Override

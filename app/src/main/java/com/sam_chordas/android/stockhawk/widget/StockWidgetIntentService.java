@@ -14,6 +14,7 @@ import com.sam_chordas.android.stockhawk.Constants;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.DetailActivity;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 import com.sam_chordas.android.stockhawk.ui.StockAppWidgetProvider;
 
@@ -53,11 +54,20 @@ public class StockWidgetIntentService extends IntentService {
             //empty list
             remoteViews.setEmptyView(R.id.widget_stock_list, R.id.empty_view);
 
+            //set individual clicks
+            Intent detailIntent = new Intent(getApplicationContext(), DetailActivity.class);
+            // Set the action for the intent.
+            detailIntent.setAction(StockAppWidgetProvider.CLICK_ACTION);
+            detailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent detailPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, detailIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setPendingIntentTemplate(R.id.widget_stock_list, detailPendingIntent);
 
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MyStocksActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            //remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.widget_title, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

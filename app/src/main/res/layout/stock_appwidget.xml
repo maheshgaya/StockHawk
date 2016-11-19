@@ -3,20 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/material_gray_800"
+    android:theme="@style/Theme.AppCompat.NoActionBar"
     android:padding="@dimen/widget_margin"
     tools:context=".ui.StockAppWidgetProvider">
 
-    <!--<TextView
-        android:id="@+id/widget"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@color/material_blue_500"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />-->
+        android:padding="@dimen/md_title_frame_margin_bottom"
+        android:layout_height="?attr/actionBarSize">
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:text="@string/app_name"/>
+    </LinearLayout>
+
     <FrameLayout
+        android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
         <ListView
             android:id="@+id/widget_stock_list"
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView

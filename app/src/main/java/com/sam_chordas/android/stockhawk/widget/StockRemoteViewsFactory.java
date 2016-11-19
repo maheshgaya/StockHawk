@@ -4,6 +4,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -13,6 +16,7 @@ import com.sam_chordas.android.stockhawk.Constants;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.StockAppWidgetProvider;
 
 /**
  * Created by Mahesh Gaya on 11/18/16.
@@ -24,29 +28,6 @@ public class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     private Context mContext;
     private int mAppWidgetId;
 
-    /*
-
-    Cursor data  = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-            new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                    QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-            QuoteColumns.ISCURRENT + " = ?",
-            new String[]{"1"},
-            null);
-
-    if (data == null){
-        return;
-    }
-
-    if (!data.moveToFirst()){
-        data.close();
-        return;
-    }
-
-    //get data from cursor
-    String quoteName = data.getString(Constants.COLUMN_SYMBOL);
-    data.close();
-
-    */
 
     public StockRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
@@ -69,8 +50,7 @@ public class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
             mCursor.close();
         }
         mCursor  = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+                Constants.PROJECTION,
                 QuoteColumns.ISCURRENT + " = ?",
                 new String[]{"1"},
                 null);
@@ -92,17 +72,30 @@ public class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     public RemoteViews getViewAt(int position) {
         // Construct a remote views item based on the app widget item XML file,
         // and set the text based on the position.
-        RemoteViews itemRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.list_item_quote);
+        RemoteViews itemRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_item_quote);
         mCursor.moveToPosition(position);
         String symbol = mCursor.getString(Constants.COLUMN_SYMBOL);
         String bidPrice = mCursor.getString(Constants.COLUMN_BIDPRICE);
         String change = mCursor.getString(Constants.COLUMN_PERCENT_CHANGE);
-        Log.d(TAG, "getViewAt: " + position + " " + symbol);
+        int isUp = mCursor.getInt(Constants.COLUMN_ISUP);
         itemRemoteViews.setTextViewText(R.id.stock_symbol, symbol);
         itemRemoteViews.setTextViewText(R.id.bid_price, bidPrice);
         itemRemoteViews.setTextViewText(R.id.change, change);
 
-        //itemRemoteViews.setOnClickPendingIntent();
+        if (isUp == 1) {
+            itemRemoteViews.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
+        } else {
+            itemRemoteViews.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_red);
+
+        }
+
+        //individual item tap
+        Uri uri = QuoteProvider.Quotes.withSymbol(symbol);
+        Bundle extras = new Bundle();
+        extras.putString(StockAppWidgetProvider.EXTRA_ITEM, uri.toString());
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtras(extras);
+        itemRemoteViews.setOnClickFillInIntent(R.id.stock_symbol, fillInIntent);
 
         // Return the remote views object.
         return itemRemoteViews;
