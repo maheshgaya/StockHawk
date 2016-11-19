@@ -108,14 +108,10 @@ public class Utils {
     public static String getCurrentDateTime(){
         long currentTime = System.currentTimeMillis();
         Timestamp currentTimestamp = new Timestamp(currentTime);
-        Log.d(LOG_TAG, "getCurrentDateTime: " + currentTimestamp.toString());
+        //Log.d(LOG_TAG, "getCurrentDateTime: " + currentTimestamp.toString());
         return currentTimestamp.toString();
     }
 
-    public static String getTime(){
-        //TODO get system preference for date
-        //return AM/PM or 24-hour
-        return null;
-    }
+
 
 }

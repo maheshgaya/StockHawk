@@ -36,12 +36,12 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: " + intent.getAction());
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
         if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             context.startService(new Intent(context, StockWidgetIntentService.class));
         } else if (intent.getAction().equals(CLICK_ACTION)){
-            Log.d(TAG, "onReceive: clicked");
+            Toast.makeText(context, "Touched view ", Toast.LENGTH_SHORT).show();
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             Intent detailIntent = new Intent(context, DetailActivity.class);

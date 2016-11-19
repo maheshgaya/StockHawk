@@ -55,7 +55,7 @@ public class StockWidgetIntentService extends IntentService {
             remoteViews.setEmptyView(R.id.widget_stock_list, R.id.empty_view);
 
             //set individual clicks
-            Intent detailIntent = new Intent(getApplicationContext(), DetailActivity.class);
+            Intent detailIntent = new Intent(getApplicationContext(), StockAppWidgetProvider.class);
             // Set the action for the intent.
             detailIntent.setAction(StockAppWidgetProvider.CLICK_ACTION);
             detailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

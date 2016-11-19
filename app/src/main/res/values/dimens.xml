@@ -10,5 +10,5 @@
 
     <!-- widget -->
     <dimen name="widget_default_width">250dp</dimen>
-    <dimen name="widget_default_height">180dp</dimen>
+    <dimen name="widget_default_height">110dp</dimen>
 </resources>
