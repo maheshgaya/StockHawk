@@ -63,7 +63,12 @@
                 android:resource="@xml/stock_appwidget_info" />
         </receiver>
 
-        <service android:name=".widget.StockWidgetIntentService" />
+        <!-- collection widget -->
+        <service android:name=".widget.StockWidgetIntentService"/>
+
+        <service android:name=".widget.StockWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
     </application>
 
 </manifest>
