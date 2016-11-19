@@ -41,7 +41,6 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
         if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             context.startService(new Intent(context, StockWidgetIntentService.class));
         } else if (intent.getAction().equals(CLICK_ACTION)){
-            Toast.makeText(context, "Touched view ", Toast.LENGTH_SHORT).show();
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             Intent detailIntent = new Intent(context, DetailActivity.class);
