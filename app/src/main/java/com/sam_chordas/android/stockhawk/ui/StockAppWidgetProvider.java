@@ -26,7 +26,6 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
 
     //opening detail activity
     public static final String CLICK_ACTION = "com.sam_chordas.android.stockhawk.ui.CLICK";
-    public static final String REFRESH_ACTION = "com.sam_chordas.android.stockhawk.ui.REFRESH";
     public static final String EXTRA_ITEM = "com.sam_chordas.android.stockhawk.ui.item";
 
     @Override
@@ -41,6 +40,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
         if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             context.startService(new Intent(context, StockWidgetIntentService.class));
         } else if (intent.getAction().equals(CLICK_ACTION)){
+            //opens DetailsActivity
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             Intent detailIntent = new Intent(context, DetailActivity.class);
