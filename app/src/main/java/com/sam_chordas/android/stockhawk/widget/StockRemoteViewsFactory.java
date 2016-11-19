@@ -95,7 +95,7 @@ public class StockRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         extras.putString(StockAppWidgetProvider.EXTRA_ITEM, uri.toString());
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
-        itemRemoteViews.setOnClickFillInIntent(R.id.stock_symbol, fillInIntent);
+        itemRemoteViews.setOnClickFillInIntent(R.id.quote_item, fillInIntent);
 
         // Return the remote views object.
         return itemRemoteViews;
