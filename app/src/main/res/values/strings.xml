@@ -25,4 +25,5 @@
 
     <!-- Widget -->
     <string name="title_widget">Stocks</string>
+    <string name="empty_widget_listview">No Stocks to show!</string>
 </resources>

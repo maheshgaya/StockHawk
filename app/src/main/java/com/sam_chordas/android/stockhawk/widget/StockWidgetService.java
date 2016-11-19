@@ -8,12 +8,13 @@ import android.widget.RemoteViewsService;
  */
 
 /**
- * Credits: https://github.com/commonsguy/cw-advandroid
+ * Credits: https://github.com/commonsguy/cw-advandroid,
+ * https://developer.android.com/guide/topics/appwidgets/index.html
  */
 public class StockWidgetService extends RemoteViewsService{
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return(new StockViewsFactory(this.getApplicationContext(),
+        return(new StockRemoteViewsFactory(this.getApplicationContext(),
                 intent));
     }
 }

@@ -41,6 +41,7 @@
                 android:value=".ui.MyStocksActivity"/>
         </activity>
 
+        <!-- fetch data from API -->
         <service android:name="com.sam_chordas.android.stockhawk.service.StockTaskService"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
             android:exported="true">
@@ -49,11 +50,14 @@
             </intent-filter>
         </service>
         <service android:name="com.sam_chordas.android.stockhawk.service.StockIntentService" />
+
+        <!-- content provider -->
         <provider
             android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
             android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:exported="false"/>
+            android:exported="true"/>
 
+        <!-- widget declaration -->
         <receiver android:name=".ui.StockAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -63,9 +67,10 @@
                 android:resource="@xml/stock_appwidget_info" />
         </receiver>
 
-        <!-- collection widget -->
+        <!-- fetch data for Widget -->
         <service android:name=".widget.StockWidgetIntentService"/>
 
+        <!-- handles collection widget -->
         <service android:name=".widget.StockWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />

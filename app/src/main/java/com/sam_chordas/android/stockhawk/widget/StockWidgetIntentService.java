@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
@@ -33,44 +34,33 @@ public class StockWidgetIntentService extends IntentService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 StockAppWidgetProvider.class));
 
-        Cursor data  = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-                QuoteColumns.ISCURRENT + " = ?",
-                new String[]{"1"},
-                null);
-
-        if (data == null){
-            return;
-        }
-
-        if (!data.moveToFirst()){
-            data.close();
-            return;
-        }
-
-        //get data from cursor
-        String quoteName = data.getString(Constants.COLUMN_SYMBOL);
-        data.close();
-
-
         String description = "Stock";
         for (int appWidgetId : appWidgetIds) {
             int layoutId = R.layout.stock_appwidget;
-            RemoteViews views = new RemoteViews(getPackageName(), layoutId);
 
-            // Add the data to the RemoteViews
-            //views.setRemoteAdapter(R.id.widget, intent); for listview
-            views.setTextViewText(R.id.widget, quoteName);
+
+            // Set up the intent that starts the StockWidgetService, which will
+            // provide the views for this collection.
+            Intent remoteViewsIntent = new Intent(getApplicationContext(), StockWidgetService.class);
+
+            // Add the app widget ID to the intent extras.
+            remoteViewsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            remoteViewsIntent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
+            RemoteViews remoteViews = new RemoteViews(getPackageName(), layoutId);
+            // Add the adapter to the RemoteViews
+            remoteViews.setRemoteAdapter(R.id.widget_stock_list, remoteViewsIntent); //for listview
+            //empty list
+            remoteViews.setEmptyView(R.id.widget_stock_list, R.id.empty_view);
 
 
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MyStocksActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            //remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
     }
 }

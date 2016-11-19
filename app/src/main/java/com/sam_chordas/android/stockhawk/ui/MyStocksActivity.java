@@ -55,7 +55,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private static final int CURSOR_LOADER_ID = 0;
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
-    private Cursor mCursor;
     boolean isConnected;
     private TextView mEmptyRecycleView;
     private RecyclerView mRecyclerView;
@@ -248,7 +247,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
-        mCursor = data;
 
         if (mCursorAdapter.getItemCount() == 0){
             mRecyclerView.setVisibility(View.GONE);
