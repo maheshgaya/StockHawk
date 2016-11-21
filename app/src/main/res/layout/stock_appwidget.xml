@@ -15,7 +15,8 @@
         android:background="@color/material_blue_500"
         android:layout_width="match_parent"
         android:padding="@dimen/md_title_frame_margin_bottom"
-        android:layout_height="?attr/actionBarSize">
+        android:elevation="4dp"
+        android:layout_height="56dp">
         <TextView
             android:id="@+id/widget_title"
             android:layout_width="match_parent"
