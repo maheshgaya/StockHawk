@@ -45,6 +45,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider{
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             Intent detailIntent = new Intent(context, DetailActivity.class);
             detailIntent.putExtra(Constants.EXTRA_DETAIL, intent.getStringExtra(StockAppWidgetProvider.EXTRA_ITEM));
+            detailIntent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(detailIntent);
 
         }
