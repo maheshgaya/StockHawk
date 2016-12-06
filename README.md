@@ -9,6 +9,8 @@ An Android app for monitoring stocks. Project 3 in the Android Developer Nanodeg
 - Add Detail Activity
 - Add App Collection Widget
 
+See [overview](https://github.com/maheshgaya/StockHawk/blob/master/OVERVIEW.md) for more details
+
 ## Using the Source Code
 1. Clone the project 
 
