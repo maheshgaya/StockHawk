@@ -1,6 +1,8 @@
 # Stock Hawk
 An Android app for monitoring stocks. Project 3 in the Android Developer Nanodegree by Google.
 
+<img src="https://github.com/maheshgaya/maheshgaya.com/blob/master/images/StockHawkApp.png" width=280 />
+
 # Objectives of this project
 - Bring this app to production level
 - Add error handling
